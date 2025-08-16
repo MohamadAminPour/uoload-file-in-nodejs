@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>آپلود فایل</title>
+</head>
+<body>
+  <h2>آپلود فایل</h2>
+  <input type="file" id="fileInput" />
+  <button onclick="uploadFile()">آپلود</button>
+
+  <p id="result"></p>
+  <img id="preview" width="200" style="display:none; margin-top:10px;" />
+
+  <script>
+    async function uploadFile() {
+      const fileInput = document.getElementById("fileInput");
+      const result = document.getElementById("result");
+
+      if (!fileInput.files.length) {
+        result.innerText ="لطفاً یک فایل انتخاب کنید"
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("myFile", fileInput.files[0]);
+
+      try {
+        const response = await fetch("http://localhost:4000/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        result.innerText = data.message;
+
+      } catch (err) {
+        result.innerText = "خطا هنگام آپلود | ❌";
+      }
+    }
+  </script>
+</body>
+</html>
